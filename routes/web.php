@@ -3,15 +3,8 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\FederalContituencyResultController;
-use App\Http\Controllers\GeneralResultController;
-use App\Http\Controllers\GubernatorialResultController;
-use App\Http\Controllers\IncidenceController;
-use App\Http\Controllers\PartyController;
-use App\Http\Controllers\PresidentialResultController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\SenatorialResultController;
-use App\Http\Controllers\StateContituencyResultController;
+use App\Http\Controllers\DrugController;
+use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -57,9 +50,60 @@ Route::middleware('auth')->group(function () {
     //logout
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
     ->name('logout');
+//delete admin user   
+Route::delete('/delete', [UserController::class, 'destroy'])->name('delete.user');
+//change user password
+Route::put('/change-password', [UserController::class, 'changePassword'])->name('user.password');
 
-        //admin dashboard
-      Route::get('/dashboard', [DashboardController::class, 'create'])->name('admin.dashboard');
+//Profile  
+Route::get('/profile', [UserController::class, 'profile'])->name('user.profile');
+Route::put('/profile', [UserController::class, 'editProfile'])->name('general.profile.edit');
+
+        //admin
+        Route::group(['prefix'=>'admin','middleware'=>'role:admin'],function(){
+          //admin dashboard
+          Route::get('/dashboard', [DashboardController::class, 'adminDashboard'])->name('admin.dashboard');
+     
+          //user
+          Route::group(['prefix'=>'user'],function(){
+         Route::get('/', [UserController::class, 'create'])->name('users');
+         Route::post('/', [UserController::class, 'store'])->name('user.add');
+         Route::get('/edit/{id}', [UserController::class, 'show'])->name('user.show');
+         Route::put('/edit', [UserController::class, 'edit'])->name('user.edit');
+
+          });
+
+   //supplier
+   Route::group(['prefix'=>'supplier'],function(){
+    Route::get('/', [SupplierController::class, 'create'])->name('suppliers');
+    Route::post('/', [SupplierController::class, 'store'])->name('supplier.add');
+    Route::get('/edit/{id}', [SupplierController::class, 'show'])->name('supplier.show');
+    Route::put('/edit', [SupplierController::class, 'edit'])->name('supplier.edit');
+    Route::delete('/delete',[SupplierController::class, 'destroy'])->name('supplier.delete');
+
+     });
+
+
+
+        });
+
+         //drug
+   Route::group(['prefix'=>'drug','middleware'=>['role:admin|pharmacist']],function(){
+    Route::get('/', [DrugController::class, 'create'])->name('drugs');
+    Route::post('/', [DrugController::class, 'store'])->name('drug.add');
+    Route::get('/edit/{id}', [DrugController::class, 'show'])->name('drug.show');
+    Route::put('/edit', [DrugController::class, 'edit'])->name('drug.edit');
+    Route::delete('/delete',[DrugController::class, 'destroy'])->name('drug.delete');
+
+     });
+
+        Route::group(['prefix'=>'pharmacy','middleware'=>'role:pharmacist'],function(){
+    //pharmacy dashboard
+    Route::get('/dashboard', [DashboardController::class, 'pharmacyDashboard'])->name('pharmacy.dashboard');
+     
+        });
+    
+
       });
 
     

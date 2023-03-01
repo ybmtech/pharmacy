@@ -17,7 +17,10 @@ class Drug extends Model
     protected $fillable = [
         'user_id',
         'name',
+        'supplier_id',
         'manufacturer',
+        'quantity',
+        'restock_level',
         'price',
         'dosage',
         'side_effect',

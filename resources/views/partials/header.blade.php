@@ -1,6 +1,6 @@
 <header class="main-header">
     <!-- Logo -->
-    <a href="{{ route('admin.dashboard') }}" class="logo">
+    <a href="#" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
      {{-- <img src="{{ asset('assets/images/babcock.jpg') }}" width="100px" height="50px"> --}}
      {{ strtoupper(config('app.name', 'pharmacy')) }}
@@ -74,7 +74,7 @@
               <!-- Menu Footer-->
               <li class="user-footer">
                 <div class="pull-left">
-                  <a href="#" class="btn btn-default btn-flat">Profile</a>
+                  <a href="{{ route('user.profile') }}" class="btn btn-default btn-flat">Profile</a>
                 </div>
                 <div class="pull-right">
                     <form method="POST" action="{{ route('logout') }}">

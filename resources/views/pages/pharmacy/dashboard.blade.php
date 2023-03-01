@@ -29,31 +29,17 @@
         <!-- small box -->
         <div class="small-box bg-aqua">
           <div class="inner">
-            <h3>150</h3>
+            <h3>{{ $drugs }}</h3>
 
             <p>Drugs</p>
           </div>
           <div class="icon">
-            {{-- <i class="ion ion-bag"></i> --}}
+          <i class="fa fa-medkit"></i> 
           </div>
-          {{-- <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a> --}}
+        <a href="{{ route('drugs') }}" class="small-box-footer">View <i class="fa fa-arrow-circle-right"></i></a>
         </div>
       </div>
-      <!-- ./col -->
-      <div class="col-lg-3 col-xs-6">
-        <!-- small box -->
-        <div class="small-box bg-green">
-          <div class="inner">
-            <h3>122 <i style="font-size: 20px"></i></h3>
-
-            <p>Users</p>
-          </div>
-          <div class="icon">
-            {{-- <i class="ion ion-stats-bars"></i> --}}
-          </div>
-          {{-- <a href="#" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a> --}}
-        </div>
-      </div>
+  
       <!-- ./col -->
       <div class="col-lg-3 col-xs-6">
         <!-- small box -->

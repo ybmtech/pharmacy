@@ -21,7 +21,7 @@
         <div class="box-body">
           <div class="form-group">
             <label for="email">Email address</label>
-            <input type="email" class="form-control" name="email" id="email" placeholder="Enter email address">
+            <input type="email" class="form-control" name="email" id="email" placeholder="Enter email address" value="{{ old('email') }}">
             @error('email')
             <span class="text-danger">{{ $message }}</span>
         @enderror

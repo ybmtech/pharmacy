@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('supplier_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('name');
+            $table->string('quantity');
             $table->bigInteger('restock_level')->unsigned()->default(0);
             $table->string('manufacturer');
             $table->decimal('price');

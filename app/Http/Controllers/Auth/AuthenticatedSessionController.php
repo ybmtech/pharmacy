@@ -31,7 +31,18 @@ class AuthenticatedSessionController extends Controller
 
         $user_role=auth()->user()->roles->pluck('name')[0];
 
-    return redirect()->intended(RouteServiceProvider::HOME);
+
+        if($user_role=="admin"){
+            return redirect()->intended('/admin/dashboard');
+        }
+
+        elseif($user_role=="pharmacist"){
+            return redirect()->intended('/pharmacy/dashboard');
+        }
+      
+        else{
+            return redirect()->route('login');
+        }
      
         
        
@@ -48,6 +59,6 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect('/login');
     }
 }
