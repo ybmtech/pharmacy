@@ -18,9 +18,11 @@ class Drug extends Model
         'user_id',
         'name',
         'supplier_id',
+        'category_id',
         'manufacturer',
         'quantity',
         'restock_level',
+        'availability',
         'price',
         'dosage',
         'side_effect',
@@ -28,4 +30,22 @@ class Drug extends Model
         'image',
     ];
 
+    public function supplier(){
+        return $this->belongsTo(Supplier::class);
+    }
+    public function category(){
+        return $this->belongsTo(DrugCategory::class,'category_id');
+    }
+
+    public function supplierName(){
+        return ucwords($this->supplier->name);
+    }
+
+    public function categoryName(){
+        return ucwords($this->category->name);
+    }
+    
+    public function drugName(){
+        return ucwords($this->name);
+    }
 }

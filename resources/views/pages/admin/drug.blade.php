@@ -34,8 +34,11 @@
               <tr>
                 <th>S/N</th>
                 <th>Image</th>
+                <th>Supplier</th>
+                <th>Category</th>
                 <th>Name</th>
                 <th>Quantity</th>
+                <th>Availability</th>
                 <th>Restock Level</th>
                 <th>Manufacturer</th>
                 <th>Price</th>
@@ -52,8 +55,11 @@
               <tr>
               <td>{{ $loop->iteration }}</td>  
               <td width="80"><a href="{{ url('/images/'.$drug->image)}}" target="_blank"><img src="{{ url('/images/'.$drug->image)}}" width="80"></a></td> 
-              <td>{{ $drug->name }}</td>  
+              <td>{{ $drug->supplierName() }}</td>  
+              <td>{{ $drug->categoryName() }}</td>  
+              <td>{{ $drug->drugName() }}</td>  
               <td>{{ $drug->quantity }}</td>  
+              <td>{{ $drug->availability==1 ? "True" : "False" }}</td>  
               <td>{{ $drug->restock_level }}</td>  
               <td>{{ $drug->manufacturer }}</td>  
               <td>₦{{ $drug->price }}</td>  
@@ -63,9 +69,11 @@
               <td>{{ $drug->created_at }}</td>  
               <td>{{ $drug->updated_at }}</td>
               <td>
+                <button class="btn btn-primary restock" id="{{ str_shuffle('01234').$drug->id.str_shuffle('0123') }}"><i class="fa fa-pencil"></i>Restock</button>  <br><br>
+            
               <a href="{{ route('drug.show',['id'=>str_shuffle('01234').$drug->id.str_shuffle('0123')]) }}" class="btn btn-primary"><i class="fa fa-edit"></i>Edit</a><br><br> 
             
-              <button class="btn btn-danger deleterow" id="{{ str_shuffle('01234').$drug->id.str_shuffle('0123') }}"><i class="fa fa-trash"></i>Delete</button>  
+               <button class="btn btn-danger deleterow" id="{{ str_shuffle('01234').$drug->id.str_shuffle('0123') }}"><i class="fa fa-trash"></i>Delete</button>  
              
             </td>  
               </tr>    
@@ -110,7 +118,20 @@
                
                   @endforeach
                       </select>
-                @error('user_type')
+                @error('supplier_id')
+                <span class="text-danger">{{ $message }}</span>
+            @enderror
+              </div>
+              <div class="form-group">
+                <label for="category_id">Select Category</label>
+                <select class="form-control" name="category_id" id="category_id">
+                  <option value="" selected disabled>select</option>
+                  @foreach ($categories as $category)
+                  <option value="{{ $category->id }}" {{ old('category_id')==$category->id ? "selected" : "" }}>{{ ucwords($category->name) }}</option>
+               
+                  @endforeach
+                      </select>
+                @error('category_id')
                 <span class="text-danger">{{ $message }}</span>
             @enderror
               </div>
@@ -180,7 +201,18 @@
           </div>
          
         </div>
-      
+        <div class="form-group">
+          <label for="category_id">Availability</label>
+          <select class="form-control" name="availability" id="availability">
+            <option value="" selected disabled>select</option>
+            <option value="1" >True</option>
+            <option value="0">False</option>
+           
+                </select>
+          @error('availability')
+          <span class="text-danger">{{ $message }}</span>
+      @enderror
+        </div>
      
       </div>
       <div class="modal-footer">
@@ -191,7 +223,7 @@
     </div>
     
   </div>
-  <!-- end add drug modal-->
+ 
 </div>
 <!-- /.modal -->    
  <!-- begin delete drug modal-->
@@ -222,10 +254,46 @@
     </div>
     
   </div>
-  <!-- end delete drug modal-->
+  
  </div>
 
- 
+  <!-- begin restock drug modal-->
+  <div class="modal fade" id="restockModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Restock Drug</h4>
+        </div>
+        <div class="modal-body">
+          <form role="form" action="{{ route('drug.restock') }}" method="post">
+            @csrf
+            @method('PUT')
+          <div class="box-body">
+            <div class="form-group">
+              <label for="quantity">Quantity</label>
+              <input type="number" class="form-control" name="quantity" id="quantity"  min="1" value="{{ old('quantity') }}">
+              @error('quantity')
+              <span class="text-danger">{{ $message }}</span>
+          @enderror
+            </div>
+          </div>
+        
+       
+        </div>
+        <div class="modal-footer">
+          <input type="hidden" name="drug_id" id="drug_id">
+          <button type="submit" class="btn btn-primary">Restock</button>
+        </form>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+   
+   </div>
+
 @endpush
 
 @push('styles')
@@ -255,6 +323,13 @@
         $("#del-user").modal('show');
           let id = $(this).attr('id');
           $('#drugId').val(id);
+      
+      });
+
+      $("body").on('click','.restock', function(e) {
+        $("#restockModal").modal('show');
+          let id = $(this).attr('id');
+          $('#drug_id').val(id);
       
       });
 

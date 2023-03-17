@@ -40,6 +40,19 @@
                 <span class="text-danger">{{ $message }}</span>
             @enderror
               </div>
+              <div class="form-group">
+                <label for="category_id">Select Category</label>
+                <select class="form-control edit_data" name="category_id" id="category_id">
+                  <option value="" selected disabled>select</option>
+                  @foreach ($categories as $category)
+                  <option value="{{ $category->id }}" {{ $drug->category_id==$category->id ? "selected" : "" }}>{{ ucwords($category->name) }}</option>
+               
+                  @endforeach
+                      </select>
+                @error('category_id')
+                <span class="text-danger">{{ $message }}</span>
+            @enderror
+              </div>
             <div class="form-group">
                 <label for="image">Image</label>
                 <input type="file" class="form-control edit_data" name="image" id="image">
@@ -104,6 +117,19 @@
             <span class="text-danger">{{ $message }}</span>
         @enderror
           </div>  
+
+          <div class="form-group">
+            <label for="category_id">Availability</label>
+            <select class="form-control edit_data" name="availability" id="availability">
+              <option value="" selected disabled>select</option>
+              <option value="1" {{ $drug->availability==1 ? "selected" : "" }}>True</option>
+              <option value="0" {{ $drug->availability==0 ? "selected" : "" }}>False</option>
+             
+                  </select>
+            @error('availability')
+            <span class="text-danger">{{ $message }}</span>
+        @enderror
+          </div>
            
           </div>
 

@@ -9,9 +9,10 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
+
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable,HasRoles;
+    use HasApiTokens, HasFactory, Notifiable,HasRoles,Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -23,6 +24,7 @@ class User extends Authenticatable
         'email',
         'phone',
         'password',
+        'patient_no'
     ];
 
     /**
@@ -56,6 +58,20 @@ class User extends Authenticatable
         );
     }
 
-   
+   public function orders(){
+    return $this->hasMany(Order::class);
+   }
+
+   public function doctor_appointments(){
+    return $this->hasMany(Appointment::class);
+   }
+
+   public function patient_appointments(){
+    return $this->hasMany(Appointment::class);
+   }
+
+   function driver_orders(){
+    return $this->belongsToMany(Order::class,'order_drivers','driver_id','order_id')->where('payment_status','paid')->latest();
+  }
     
 }

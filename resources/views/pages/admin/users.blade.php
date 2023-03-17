@@ -37,6 +37,7 @@
                 <th>Email</th>
                 <th>Phone</th>
                 <th>Role</th>
+                <th>Patient No</th>
                 <th>Created At</th>
                 <th>Updated At</th>
                 <th>Action</th>
@@ -50,6 +51,7 @@
               <td>{{ $user->email }}</td>  
               <td>{{ $user->phone }}</td>  
               <td>{{ ucwords($user->roles[0]->name) }}</td> 
+              <td>{{ ($user->roles[0]->name =="student" || $user->roles[0]->name =="non student") ? $user->patient_no : "Not a patient" }}</td> 
               <td>{{ $user->created_at }}</td>  
               <td>{{ $user->updated_at }}</td>  
               <td>

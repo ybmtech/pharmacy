@@ -36,10 +36,8 @@
   
             <div class="form-group">
               <label for="email">Email address</label>
-              <input type="email" class="form-control edit_data" name="email" id="email"  value="{{ old('email') ?? auth()->user()->email }}" readonly>
-              @error('email')
-              <span class="text-danger">{{ $message }}</span>
-          @enderror
+              <input type="email" class="form-control edit_data" id="email"  value="{{ old('email') ?? auth()->user()->email }}" readonly>
+             
             </div>
   
             <div class="form-group">
@@ -49,6 +47,62 @@
               <span class="text-danger">{{ $message }}</span>
           @enderror
             </div>
+
+            @if(auth()->user()->roles->pluck('name')[0]=="doctor")
+            <div class="form-group">
+              <label for="speciality">Speciality</label>
+              <input type="text" class="form-control edit_data" name="speciality" id="speciality"  value="{{ old('speciality') ?? auth()->user()->speciality }}">
+              @error('speciality')
+              <span class="text-danger">{{ $message }}</span>
+          @enderror
+            </div>
+            @endif
+
+            @if(auth()->user()->roles->pluck('name')[0]=="non student")
+            <div class="form-group">
+              <label for="pat_no">Patient No</label>
+              <input type="text" class="form-control" id="pat_no"  value="{{ auth()->user()->patient_no }}" readonly>
+            
+            </div>
+
+            @endif
+
+            @if(auth()->user()->roles->pluck('name')[0]=="student")
+
+            <div class="form-group">
+              <label for="pat_no">Patient No</label>
+              <input type="text" class="form-control" id="pat_no"  value="{{ auth()->user()->patient_no }}" readonly>
+            
+            </div>
+
+            <div class="form-group">
+              <label for="department">Department</label>
+              <input type="text" class="form-control edit_data" name="department" id="department"  value="{{ old('department') ?? auth()->user()->department }}">
+              @error('department')
+              <span class="text-danger">{{ $message }}</span>
+          @enderror
+            </div>
+
+           
+
+            <div class="form-group">
+              <label for="course">Course</label>
+              <input type="text" class="form-control edit_data" name="course" id="course"  value="{{ old('course') ?? auth()->user()->course }}">
+              @error('course')
+              <span class="text-danger">{{ $message }}</span>
+          @enderror
+            </div>
+
+            <div class="form-group">
+              <label for="level">Level</label>
+              <input type="text" class="form-control edit_data" name="level" id="level"  value="{{ old('level') ?? auth()->user()->level }}">
+              @error('level')
+              <span class="text-danger">{{ $message }}</span>
+          @enderror
+            </div>
+
+
+            @endif
   
             </div>   
 

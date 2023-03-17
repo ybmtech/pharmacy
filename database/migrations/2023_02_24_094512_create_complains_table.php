@@ -16,10 +16,9 @@ return new class extends Migration
         Schema::create('complains', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId('doctor_id')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->longText('complain')->nullable();
-            $table->longText('prescription')->nullable();
-            $table->enum('status',['pending','attend','discard'])->default('pending');
+             $table->longText('message');
+            $table->longText('reply')->nullable();
+            $table->enum('status',['pending','closed'])->default('pending');
             $table->timestamps();
         });
     }

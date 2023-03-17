@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Drug;
+use App\Models\DrugCategory;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -26,9 +27,20 @@ class DrugController extends Controller
 
         $drugs=Drug::latest()->get();
         $suppliers=Supplier::all();
-        return view('pages.admin.drug',compact('drugs','suppliers'));
+        $categories=DrugCategory::all();
+        return view('pages.admin.drug',compact('drugs','suppliers','categories'));
     }
 
+
+    /**
+     * showing expire drugs
+     */
+    public function expireDrug(){
+
+      $drugs=Drug::where('expire_date','<=',now())->orderBy('expire_date')->get();
+    
+      return view('pages.admin.expired-drugs',compact('drugs'));
+  }
 
     /**
      * showing edit drug
@@ -38,7 +50,8 @@ class DrugController extends Controller
       $drug_id=substr($slash_id_prefix,0,-4);
       $drug=Drug::where('id',$drug_id)->firstOrFail();
       $suppliers=Supplier::all();
-       return view('pages.admin.edit-drug',compact('drug','suppliers'));
+      $categories=DrugCategory::all();
+       return view('pages.admin.edit-drug',compact('drug','suppliers','categories'));
    }
 
 
@@ -55,6 +68,8 @@ class DrugController extends Controller
           'side_effect' => ['required', 'string'],
           'expire_date' => ['required', 'date'],
           'supplier_id' => ['required'],
+          'availability' => ['required'],
+          'category_id' => ['required'],
           'image'=>'required|image|mimes:jpg,jpeg,png|max:2048',
          ], 
   );
@@ -76,7 +91,7 @@ class DrugController extends Controller
   $validated['user_id']=$user_id;
   $validated['image']=$image_name;
   $validated['restock_level']=1;
-
+   
 
      $drug=Drug::create($validated);
   
@@ -98,6 +113,8 @@ class DrugController extends Controller
       if($request->hasFile('image')){
         $validate=Validator::make($request->all(),[
           'drug_id'=>['required'],
+          'supplier_id' => ['required'],
+          'category_id' => ['required'],
           'name' => ['required','string','max:200'],
           'quantity'=>['required','numeric'],
           'manufacturer'=>['required','string','max:20'],
@@ -105,6 +122,7 @@ class DrugController extends Controller
           'dosage' => ['required', 'string'],
           'side_effect' => ['required', 'string'],
           'expire_date' => ['required', 'date'],
+          'availability' => ['required'],
           'image'=>'required|image|mimes:jpg,jpeg,png|max:2048',
            ], 
            [
@@ -115,11 +133,14 @@ class DrugController extends Controller
       else{
         $validate=Validator::make($request->all(),[
           'drug_id'=>['required'],
+          'supplier_id' => ['required'],
+          'category_id' => ['required'],
           'name' => ['required','string','max:200'],
           'quantity'=>['required','numeric'],
           'manufacturer'=>['required','string','max:20'],
           'price'=>['required','numeric'],
           'dosage' => ['required', 'string'],
+          'availability' => ['required'],
           'side_effect' => ['required', 'string'],
           'expire_date' => ['required', 'string'],
            ], 
@@ -160,6 +181,51 @@ class DrugController extends Controller
       return redirect()->route('drugs');
   }
   
+
+  /**
+       * restock drug
+       */
+  
+       public function restock(Request $request){
+  
+        $validate=Validator::make($request->all(),[
+          'drug_id' => ['required'],
+          'quantity' => ['required'],
+             ], 
+             [
+              'drug_id.required'=>'Wrong Drug'
+             ]
+  );
+  
+  if($validate->fails()){
+    Alert::info('', $validate->errors()->first());
+    return back()->withErrors($validate)->withInput();
+  }
+  
+  $slash_id_prefix=substr($request->drug_id,5);
+  $drug_id=substr($slash_id_prefix,0,-4);
+  
+  $drug=Drug::find($drug_id);
+  if(is_null($drug)){
+     Alert::info('','Drug not found');
+     return back(); 
+  }
+  //restock drug
+  $drug->quantity=$drug->quantity + $request->quantity;
+  $drug->restock_level=$drug->restock_level + 1;
+  $drug->updated_at=now();
+  $restock_drug=$drug->save();
+  
+  if($restock_drug){
+     Alert::success('','Drug Restocked');
+     return back(); 
+  
+  }
+  Alert::info('','Fail to restock');
+  return back();
+  
+       }
+
        
    /**
        * delete drug

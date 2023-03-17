@@ -39,6 +39,15 @@ class AuthenticatedSessionController extends Controller
         elseif($user_role=="pharmacist"){
             return redirect()->intended('/pharmacy/dashboard');
         }
+        elseif($user_role=="doctor"){
+            return redirect()->intended('/doctor/dashboard');
+        }
+        elseif($user_role=="driver"){
+            return redirect()->intended('/driver/dashboard');
+        }
+        elseif($user_role=="student" || $user_role=="non student"){
+            return redirect()->intended('/patient/dashboard');
+        }
       
         else{
             return redirect()->route('login');

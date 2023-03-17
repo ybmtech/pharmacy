@@ -5,9 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+
 class Supplier extends Model
 {
-    use HasFactory;
+    
 
     /**
      * The attributes that are mass assignable.
@@ -20,4 +21,8 @@ class Supplier extends Model
         'phone',
         'address',
     ];
+
+    public function drugs(){
+        return $this->hasMany(Drug::class);
+    }
 }

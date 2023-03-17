@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId('doctor_id')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('booking_date');
             $table->string('booked_date')->nullable();
-            $table->enum('status',['doctor initiate','doctor approved','user approved','pending','cancelled'])->default('pending');
+            $table->enum('status',['approved','pending','cancelled'])->default('pending');
             $table->timestamps();
         });
     }

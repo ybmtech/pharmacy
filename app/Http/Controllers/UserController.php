@@ -17,7 +17,7 @@ class UserController extends Controller
      */
     public function __construct()
     {
-       $this->middleware(['auth','role:admin']);
+       $this->middleware(['auth','role:admin'])->except(['profile','editProfile','notification']);
      }
 
       /**
@@ -70,12 +70,19 @@ if($validate->fails()){
 }
 
 $password=Hash::make($request->password);
+if($request->user_type=="student" || $request->user_type=="non student" ){
+  $patient_no='Buth'.str_shuffle('0123456').mt_rand(99,999);
+}
+else{
+  $patient_no="";
+}
 
    $user=User::create([
     'name'=>$request->name,
     'phone'=>$request->phone,
     'email'=>$request->email,
     'password'=>$password,
+    'patient_no'=>$patient_no
    ]);
 
 
@@ -181,11 +188,33 @@ if(is_null($user)){
      * edit admin profile
      */
     public function editProfile(Request $request){
-      $validate=Validator::make($request->all(),[
-        'name' => ['required','string','max:200'],
-        'phone'=>['required','string','max:20']
-         ]
-);
+
+      if(auth()->user()->roles->pluck('name')[0]=="doctor"){
+        $validate=Validator::make($request->all(),[
+          'name' => ['required','string','max:200'],
+          'phone'=>['required','string','max:20'],
+          'speciality'=>['required','string','max:100'],
+           ]
+  );
+      }
+      elseif(auth()->user()->roles->pluck('name')[0]=="student"){
+        $validate=Validator::make($request->all(),[
+          'name' => ['required','string','max:200'],
+          'phone'=>['required','string','max:20'],
+           'department'=>['required','string','max:100'],
+          'course'=>['required','string','max:100'],
+          'level'=>['required','string','max:10'],
+           ]
+  );
+      }
+      else{
+        $validate=Validator::make($request->all(),[
+          'name' => ['required','string','max:200'],
+          'phone'=>['required','string','max:20']
+           ]
+  );
+      }
+    
 
 if($validate->fails()){
   Alert::info('', $validate->errors()->first());
@@ -194,13 +223,8 @@ if($validate->fails()){
 
 
 $user_id=auth()->user()->id;
-
-
-
-   $update_user=User::where('id',$user_id)->update([
-    'name'=>$request->name,
-    'phone'=>$request->phone
-   ]);
+$validated = $validate->validated();
+   $update_user=User::where('id',$user_id)->update($validated);
 
 
    if($update_user){
@@ -253,6 +277,14 @@ if($delete_user){
 Alert::info('','Fail to delete');
 return back();
 
+     }
+
+
+     public function notification($notification_id){
+      $user=User::find(auth()->user()->id);
+      $notification=$user->unreadNotifications->where('id',$notification_id)->first();
+      $user->unreadNotifications->where('id',$notification_id)->markAsRead();
+       return view('pages.read-notification',compact('notification'));
      }
 
 }
