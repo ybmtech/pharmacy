@@ -60,7 +60,7 @@
                     @if($appointment->status=="approved")
                     <button class="btn btn-primary decline" id="{{ $appointment->id }}">Cancel</button>
                     @endif
-                    <a href="" class="btn btn-primary">Chat</a>
+                    <a href="{{ route('doctor.chat',$appointment->patient->id) }}" class="btn btn-primary">Chat</a>
                 </td>  
               </tr>    
               @empty

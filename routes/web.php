@@ -2,6 +2,7 @@
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
+use App\Http\Controllers\ChatController;
 use App\Http\Controllers\ComplainController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DoctorController;
@@ -193,6 +194,11 @@ Route::put('/profile', [UserController::class, 'editProfile'])->name('general.pr
     //paytack callback
     Route::get('/paystack-callback',[OrderController::class,'paystackCallback'])->name('paystack.callback');
    
+       Route::get('/chat/{id?}',[ChatController::class,'patient'])->name('patient.chat');
+       Route::post('/chat',[ChatController::class,'patientSaveChat'])->name('patient.chat.save');
+
+       Route::get('/doctor/chat/{id?}',[ChatController::class,'doctor'])->name('doctor.chat');
+       Route::post('/doctor/chat',[ChatController::class,'doctorSaveChat'])->name('doctor.chat.save');
 
       });
 

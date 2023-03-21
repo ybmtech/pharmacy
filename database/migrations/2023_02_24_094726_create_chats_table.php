@@ -17,6 +17,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('patient_id')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('doctor_id')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('sender_id')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->longText('message');
             $table->timestamps();
         });

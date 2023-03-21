@@ -22,7 +22,7 @@
 
         <li><a href="{{ route('patient.payment.history') }}"><i class="fa fa-list"></i> <span>Payment Histories</span></a></li>
 
-        <li><a href="#"><i class="fa  fa-comments"></i> <span>Chat</span></a></li>
+        <li><a href="{{ route('patient.chat')  }}"><i class="fa  fa-comments"></i> <span>Chat</span></a></li>
 
       
       

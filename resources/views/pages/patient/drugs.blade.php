@@ -9,12 +9,15 @@
       
       </a>
     </div><br><br>
+    <form method="GET" action="{{ route('patient.drug') }}">
     <div class="input-group input-group-sm" style="clear:both;">
-        <input type="text" class="form-control" placeholder="search drug">
+        <input type="text" class="form-control" placeholder="search drug" name="search">
             <span class="input-group-btn">
-              <button type="button" class="btn btn-info btn-flat">Search</button>
+              <button type="submit" class="btn btn-info btn-flat">Search</button>
             </span>
+     
       </div>
+    </form>
       <br><br>
     <div class="row">
         @forelse ($drugs as $drug)

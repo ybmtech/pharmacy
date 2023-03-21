@@ -25,11 +25,17 @@ class PatientController extends Controller
      /**
     * showing category
     */
-   public function create(){
+   public function create(Request $request){
 
      $total_item=\Cart::getContent()->count();
-       $drugs=Drug::where('availability',1)->orderBy('name')->paginate(4);
-       return view('pages.patient.drugs',compact('drugs','total_item'));
+       if(isset($request->search)){
+        $drugs=Drug::where('name','LIKE','%'.$request->search.'%')->where('availability',1)->orderBy('name')->paginate(4);
+       }
+       else{
+        $drugs=Drug::where('availability',1)->orderBy('name')->paginate(4);
+ 
+       }
+        return view('pages.patient.drugs',compact('drugs','total_item'));
    }
 
 

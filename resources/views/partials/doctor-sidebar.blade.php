@@ -14,7 +14,7 @@
 
         <li><a href="{{ route('doctor.prescription') }}"><i class="fa fa-server"></i> <span>Prescriptions</span></a></li>
 
-        <li><a href="#"><i class="fa  fa-comments"></i> <span>Chat</span></a></li>
+        <li><a href="{{ route('doctor.chat') }}"><i class="fa  fa-comments"></i> <span>Chat</span></a></li>
 
       
       

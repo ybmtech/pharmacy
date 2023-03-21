@@ -45,7 +45,7 @@
   
             <div class="form-group">
               <label for="phone">Phone</label>
-              <input type="phone" class="form-control edit_data" name="phone" id="phone"  value="{{ old('phone') ?? $supplier->phone }}">
+              <input type="text" class="form-control edit_data is-number" maxlength="11" name="phone" id="phone"  value="{{ old('phone') ?? $supplier->phone }}">
               @error('phone')
               <span class="text-danger">{{ $message }}</span>
           @enderror
