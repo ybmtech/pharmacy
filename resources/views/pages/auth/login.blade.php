@@ -47,7 +47,8 @@
         </div>
       </form>
   
-      <a href="{{ route('password.request') }}">I forgot my password</a><br>
+      <a href="{{ route('password.request') }}">I forgot my password</a> | 
+      <a href="{{ route('register') }}">Register</a><br>
    
     </div>
     <!-- /.login-box-body -->

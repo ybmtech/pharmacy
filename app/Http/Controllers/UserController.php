@@ -17,7 +17,7 @@ class UserController extends Controller
      */
     public function __construct()
     {
-       $this->middleware(['auth','role:admin'])->except(['profile','editProfile','notification']);
+       $this->middleware(['auth','role:admin'])->except(['profile','editProfile','notification','register','saveRegister']);
      }
 
       /**
@@ -285,6 +285,49 @@ return back();
       $notification=$user->unreadNotifications->where('id',$notification_id)->first();
       $user->unreadNotifications->where('id',$notification_id)->markAsRead();
        return view('pages.read-notification',compact('notification'));
+     }
+
+
+     public function register(){
+      return view('pages.register');
+     }
+
+     public function saveRegister(Request $request){
+
+      $validate=Validator::make($request->all(),[
+        'name' => ['required','string','max:200'],
+        'phone'=>['required','string','max:20'],
+        'user_type'=>['required','string'],
+        'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+       'password' => ['required', 'confirmed', Rules\Password::min(8)],
+       ], 
+        );
+
+       if($validate->fails()){
+      return back()->withErrors($validate)->withInput();
+        }
+
+        $password=Hash::make($request->password);
+  $patient_no='Buth'.str_shuffle('0123456').mt_rand(99,999);
+
+        $user=User::create([
+          'name'=>$request->name,
+          'phone'=>$request->phone,
+          'email'=>$request->email,
+          'password'=>$password,
+          'patient_no'=>$patient_no,
+          'department'=>$request->department,
+        'course'=>$request->course,
+        'level'=>$request->level,
+         ]);
+      
+      
+         if($user){
+        //assign role to user
+        $user->assignRole($request->user_type);
+        return redirect()->route('login')->with('status','Registered Successfully,you can now login');
+         }
+    
      }
 
 }
